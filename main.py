@@ -60,16 +60,12 @@ def draw_objects():
     text_time = font.render("Time: " + "{:.2f}".format(target_timer/1000), True, (255, 255, 255))
     WIN.blit(text_time, (600, 10))
 
-while running:
-    # Отображение фоновой картинки
-
+while running:    # Отображение фоновой картинки
     clock.tick(30)
     target_timer = pygame.time.get_ticks() - start_time
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and cracker_rect.x - cracker_speed > 0:
         cracker_rect.x -= cracker_speed
@@ -86,13 +82,17 @@ while running:
         else:
             enemy.rect.y = random.randint(0, WIDTH - enemy.size)
             enemy.rect.x = 0
-        # if enemy.rect.y + enemy.size > cracker_rect.y and cracker_rect.x < enemy.rect.x + enemy.size and cracker_rect.x + cracker_size > enemy.rect.x:
-        #    enemies.remove(enemy)
+
         if enemy.rect.colliderect(cracker_rect):
-            life =- 1
+            life -= 1
             if life < 0:
-                print(f"End! Time: " + "{:.2f}".format(target_timer/1000))
-                time.sleep(10)
+                font = pygame.font.SysFont(None, 100)
+                text = font.render("END. Your time : " + "{:.2f}".format(target_timer/1000), True, (255, 255, 255))
+                text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2))
+                WIN.blit(text, text_rect)
+                pygame.display.flip()
+                pygame.time.wait(5000)  # Пауза перед завершением игры
+                running = False  # Остановка игры
             else:
                 text_score = font.render("life: " + str(life), True, (255, 255, 255))
                 WIN.blit(text_score, (10, 10))
